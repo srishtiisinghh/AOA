@@ -1,0 +1,61 @@
+Implement an optimized bubble sort algorithm using a flag to detect whether any swap occurs during a pass. Stop the algorithm
+early if the array is already sorted. Display the number of passes and comparisons.
+
+
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, t, sw, passes = 0, cmp = 0;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 0; i < n - 1; i++) {
+        sw = 0; passes++;
+        for (j = 0; j < n - 1 - i; j++) {
+            cmp++;
+            if (a[j] > a[j + 1]) { t = a[j]; a[j] = a[j + 1]; a[j + 1] = t; sw = 1; }
+        }
+        if (!sw) break;
+    }
+    printf("Sorted: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("\nPasses = %d, Comparisons = %d\n", passes, cmp);
+    return 0;
+}
+
+
+
+
+
+#include <stdio.h>
+int main(void)
+{
+    int a[100], n, i, j, temp, swapped, passes = 0, comparisons = 0;
+    printf("Enter number of elements (1-100): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 100) {
+        printf("Invalid size\n");
+        return 0;
+    }
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+    for (i = 0; i < n - 1; i++) {
+        swapped = 0;
+        passes++;
+        for (j = 0; j < n - 1 - i; j++) {
+            comparisons++;
+            if (a[j] > a[j + 1]) {
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+                swapped = 1;
+            }
+        }
+        if (!swapped)           /* no swap in this pass: already sorted */
+            break;
+    }
+    printf("Sorted array: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\nNumber of passes = %d\nNumber of comparisons = %d\n", passes, comparisons);
+    return 0;
+}
