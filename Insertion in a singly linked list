@@ -1,0 +1,51 @@
+Implement insertion operations in a singly linked list to insert a new node at the beginning, at the end, and
+at a specified valid position. Display the updated list after each operation.
+
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; } *head = NULL;
+struct node *mk(int x) {
+    struct node *p = malloc(sizeof(struct node));
+    p->data = x; p->next = NULL;
+    return p;
+}
+void show() {
+    struct node *p;
+    printf("List: ");
+    for (p = head; p; p = p->next) printf("%d ", p->data);
+    printf("\n");
+}
+int main() {
+    struct node *p, *t, *tail = NULL;
+    int n, i, x, pos, len, ch;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &x); p = mk(x);
+        if (head == NULL) head = p; else tail->next = p;
+        tail = p;
+    }
+    show();
+    do {
+        printf("1.Begin 2.End 3.Position 0.Exit: "); scanf("%d", &ch);
+        if (ch < 1 || ch > 3) continue;
+        printf("Value: "); scanf("%d", &x); p = mk(x);
+        if (ch == 3) {
+            printf("Position: "); scanf("%d", &pos);
+            for (len = 0, t = head; t; t = t->next) len++;
+            if (pos < 1 || pos > len + 1) { printf("Invalid\n"); free(p); continue; }
+            if (pos == 1) ch = 1;
+            else {
+                for (t = head, i = 1; i < pos - 1; i++) t = t->next;
+                p->next = t->next; t->next = p;
+            }
+        }
+        if (ch == 1) { p->next = head; head = p; }
+        else if (ch == 2) {
+            if (head == NULL) head = p;
+            else { for (t = head; t->next; t = t->next); t->next = p; }
+        }
+        show();
+    } while (ch != 0);
+    return 0;
+}
