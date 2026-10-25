@@ -1,0 +1,30 @@
+Implement a linear queue using an array. Provide menu-driven operations for ENQUEUE, DEQUEUE,
+PEEK, and DISPLAY. Handle queue overflow and underflow conditions
+
+#include <stdio.h>
+#define MAX 5
+
+int main(void) {
+    int q[MAX], f = 0, r = -1, ch, x, i;
+
+    do {
+        printf("\n1.Enqueue 2.Dequeue 3.Peek 4.Display 0.Exit: ");
+        if (scanf("%d", &ch) != 1) break;
+
+        if (ch == 1) {
+            if (r == MAX - 1) printf("Overflow\n");
+            else { printf("Value: "); scanf("%d", &x); q[++r] = x; }
+        } else if (ch == 2) {
+            if (f > r) printf("Underflow\n");
+            else printf("Dequeued %d\n", q[f++]);
+        } else if (ch == 3) {
+            if (f > r) printf("Queue empty\n");
+            else printf("Front = %d\n", q[f]);
+        } else if (ch == 4) {
+            if (f > r) printf("Queue empty\n");
+            else { for (i = f; i <= r; i++) printf("%d ", q[i]); printf("\n"); }
+        }
+    } while (ch != 0);
+
+    return 0;
+}
