@@ -28,111 +28,76 @@ int main() {
 
 
 
-#include <stdio.h>
+
+ #include <stdio.h>
 #include <stdlib.h>
 struct Node {
     int data;
     struct Node *next;
 };
-void display(struct Node *h)
-{
-    printf("List: ");
-    if (h == NULL)
-        printf("(empty)");
-    for (; h != NULL; h = h->next)
-        printf("%d ", h->data);
-    printf("\n");
-}
 int main(void)
 {
-    struct Node *head = NULL, *tail = NULL, *p, *prev;
-    int n, i, x, pos, ch, found;
-    printf("Enter number of initial nodes: ");
-    if (scanf("%d", &n) != 1 || n < 0)
-        return 0;
-    if (n > 0)
-        printf("Enter %d integers: ", n);
-    for (i = 0; i < n; i++) {
-        scanf("%d", &x);
-        p = (struct Node *)malloc(sizeof(struct Node));
-        if (p == NULL) return 1;
-        p->data = x;
-        p->next = NULL;
-        if (head == NULL) head = p;
-        else tail->next = p;
-        tail = p;
-    }
-    display(head);
+    struct Node *top = NULL, *p;
+    int ch, x;
     do {
-        printf("\n1. Delete first  2. Delete last  3. Delete at position\n");
-        printf("4. Search  0. Exit\nEnter choice: ");
+        printf("\n--- STACK USING LINKED LIST ---\n");
+        printf("1. PUSH  2. POP  3. PEEK  4. DISPLAY  0. Exit\nEnter choice: ");
         if (scanf("%d", &ch) != 1)
             break;
-        if (ch >= 1 && ch <= 3) {
-            if (head == NULL) {
-                printf("List is empty\n");
-                continue;
-            }
-            if (ch == 1) {                          /* delete first node */
-                p = head;
-                head = head->next;
-                printf("Deleted %d\n", p->data);
-                free(p);
-            } else if (ch == 2) {                   /* delete last node */
-                prev = NULL;
-                for (p = head; p->next != NULL; p = p->next)
-                    prev = p;
-                if (prev == NULL)
-                    head = NULL;                    /* only one node */
-                else
-                    prev->next = NULL;
-                printf("Deleted %d\n", p->data);
-                free(p);
-            } else {                                /* delete at position */
-                printf("Enter position: ");
-                scanf("%d", &pos);
-                if (pos < 1) {
-                    printf("Invalid position\n");
-                    continue;
-                }
-                prev = NULL;
-                p = head;
-                for (i = 1; p != NULL && i < pos; i++) {
-                    prev = p;
-                    p = p->next;
-                }
-                if (p == NULL) {
-                    printf("Invalid position\n");
-                    continue;
-                }
-                if (prev == NULL)
-                    head = p->next;
-                else
-                    prev->next = p->next;
-                printf("Deleted %d\n", p->data);
-                free(p);
-            }
-            display(head);
-        } else if (ch == 4) {                       /* search */
-            printf("Enter value to search: ");
+        switch (ch) {
+        case 1:
+            printf("Enter value: ");
             scanf("%d", &x);
-            found = 0;
-            for (p = head, pos = 1; p != NULL; p = p->next, pos++) {
-                if (p->data == x) {
-                    printf("%d found at position %d\n", x, pos);
-                    found = 1;
-                }
+            p = (struct Node *)malloc(sizeof(struct Node));
+            if (p == NULL) {
+                printf("Memory allocation failed\n");
+                return 1;
             }
-            if (!found)
-                printf("%d not found\n", x);
-        } else if (ch != 0) {
+            p->data = x;
+            p->next = top;      /* new node points to old top */
+            top = p;
+            printf("%d pushed\n", x);
+            break;
+        case 2:
+            if (top == NULL) {
+                printf("Stack is empty (Underflow)\n");
+            } else {
+                p = top;
+                printf("Popped %d\n", p->data);
+                top = top->next;
+                free(p);
+            }
+            break;
+        case 3:
+            if (top == NULL)
+                printf("Stack is empty\n");
+            else
+                printf("Top element = %d\n", top->data);
+            break;
+        case 4:
+            if (top == NULL) {
+                printf("Stack is empty\n");
+            } else {
+                printf("Stack (top to bottom): ");
+                for (p = top; p != NULL; p = p->next)
+                    printf("%d ", p->data);
+                printf("\n");
+            }
+            break;
+        case 0:
+            printf("Exiting...\n");
+            break;
+        default:
             printf("Invalid choice\n");
         }
     } while (ch != 0);
-    while (head != NULL) {
-        p = head;
-        head = head->next;
+    while (top != NULL) {
+        p = top;
+        top = top->next;
         free(p);
     }
+    return 0;
+}
+
     return 0;
 }
