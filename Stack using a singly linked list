@@ -1,0 +1,138 @@
+Implement a stack using a singly linked list. Provide PUSH, POP, PEEK, and DISPLAY operations. Handle the empty-stack
+condition.
+
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; };
+int main() {
+    struct node *top = NULL, *p;
+    int ch;
+    do {
+        printf("\n1.Push 2.Pop 3.Peek 4.Display 0.Exit: "); scanf("%d", &ch);
+        if (ch == 1) {
+            p = malloc(sizeof(struct node));
+            printf("Value: "); scanf("%d", &p->data);
+            p->next = top; top = p;
+        } else if (ch == 2) {
+            if (top == NULL) printf("Stack empty");
+            else { p = top; printf("Popped %d", p->data); top = top->next; free(p); }
+        } else if (ch == 3) {
+            if (top == NULL) printf("Stack empty"); else printf("Top = %d", top->data);
+        } else if (ch == 4) {
+            if (top == NULL) printf("Stack empty");
+            else for (p = top; p; p = p->next) printf("%d ", p->data);
+        }
+    } while (ch != 0);
+    return 0;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *next;
+};
+void display(struct Node *h)
+{
+    printf("List: ");
+    if (h == NULL)
+        printf("(empty)");
+    for (; h != NULL; h = h->next)
+        printf("%d ", h->data);
+    printf("\n");
+}
+int main(void)
+{
+    struct Node *head = NULL, *tail = NULL, *p, *prev;
+    int n, i, x, pos, ch, found;
+    printf("Enter number of initial nodes: ");
+    if (scanf("%d", &n) != 1 || n < 0)
+        return 0;
+    if (n > 0)
+        printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &x);
+        p = (struct Node *)malloc(sizeof(struct Node));
+        if (p == NULL) return 1;
+        p->data = x;
+        p->next = NULL;
+        if (head == NULL) head = p;
+        else tail->next = p;
+        tail = p;
+    }
+    display(head);
+    do {
+        printf("\n1. Delete first  2. Delete last  3. Delete at position\n");
+        printf("4. Search  0. Exit\nEnter choice: ");
+        if (scanf("%d", &ch) != 1)
+            break;
+        if (ch >= 1 && ch <= 3) {
+            if (head == NULL) {
+                printf("List is empty\n");
+                continue;
+            }
+            if (ch == 1) {                          /* delete first node */
+                p = head;
+                head = head->next;
+                printf("Deleted %d\n", p->data);
+                free(p);
+            } else if (ch == 2) {                   /* delete last node */
+                prev = NULL;
+                for (p = head; p->next != NULL; p = p->next)
+                    prev = p;
+                if (prev == NULL)
+                    head = NULL;                    /* only one node */
+                else
+                    prev->next = NULL;
+                printf("Deleted %d\n", p->data);
+                free(p);
+            } else {                                /* delete at position */
+                printf("Enter position: ");
+                scanf("%d", &pos);
+                if (pos < 1) {
+                    printf("Invalid position\n");
+                    continue;
+                }
+                prev = NULL;
+                p = head;
+                for (i = 1; p != NULL && i < pos; i++) {
+                    prev = p;
+                    p = p->next;
+                }
+                if (p == NULL) {
+                    printf("Invalid position\n");
+                    continue;
+                }
+                if (prev == NULL)
+                    head = p->next;
+                else
+                    prev->next = p->next;
+                printf("Deleted %d\n", p->data);
+                free(p);
+            }
+            display(head);
+        } else if (ch == 4) {                       /* search */
+            printf("Enter value to search: ");
+            scanf("%d", &x);
+            found = 0;
+            for (p = head, pos = 1; p != NULL; p = p->next, pos++) {
+                if (p->data == x) {
+                    printf("%d found at position %d\n", x, pos);
+                    found = 1;
+                }
+            }
+            if (!found)
+                printf("%d not found\n", x);
+        } else if (ch != 0) {
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+    while (head != NULL) {
+        p = head;
+        head = head->next;
+        free(p);
+    }
+    return 0;
+}
