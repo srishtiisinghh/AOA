@@ -1,0 +1,56 @@
+Write a program to sort an array in ascending order using selection sort. Find the minimum element in the unsorted portion and
+swap it with the first unsorted element. Display the array after each pass.
+
+
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, k, m, t;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 0; i < n - 1; i++) {
+        m = i;
+        for (j = i + 1; j < n; j++)
+            if (a[j] < a[m]) m = j;
+        t = a[i]; a[i] = a[m]; a[m] = t;
+        printf("Pass %d: ", i + 1);
+        for (k = 0; k < n; k++) printf("%d ", a[k]);
+        printf("\n");
+    }
+    return 0;
+}
+
+
+#include <stdio.h>
+int main(void)
+{
+    int a[100], n, i, j, k, min, temp;
+    printf("Enter number of elements (1-100): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 100) {
+        printf("Invalid size\n");
+        return 0;
+    }
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+    for (i = 0; i < n - 1; i++) {
+        min = i;                                /* index of smallest in unsorted part */
+        for (j = i + 1; j < n; j++)
+            if (a[j] < a[min])
+                min = j;
+        if (min != i) {
+            temp = a[i];
+            a[i] = a[min];
+            a[min] = temp;
+        }
+        printf("After pass %d: ", i + 1);
+        for (k = 0; k < n; k++)
+            printf("%d ", a[k]);
+        printf("\n");
+    }
+    printf("Sorted array: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}
