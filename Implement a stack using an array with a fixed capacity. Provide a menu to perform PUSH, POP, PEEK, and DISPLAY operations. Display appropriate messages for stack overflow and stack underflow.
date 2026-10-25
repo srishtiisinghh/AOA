@@ -1,0 +1,55 @@
+Implement a stack using an array with a fixed capacity. Provide a menu to perform PUSH, POP, PEEK, and DISPLAY
+operations. Display appropriate messages for stack overflow and stack underflow.
+
+#include <stdio.h>
+#define CAP 5
+int main(void)
+{
+    int stack[CAP], top = -1, ch, x, i;
+    do {
+        printf("\n--- STACK MENU (capacity %d) ---\n", CAP);
+        printf("1. PUSH  2. POP  3. PEEK  4. DISPLAY  0. Exit\nEnter choice: ");
+        if (scanf("%d", &ch) != 1)
+            break;
+        switch (ch) {
+        case 1:
+            if (top == CAP - 1) {
+                printf("Stack Overflow! Cannot push.\n");
+            } else {
+                printf("Enter value: ");
+                scanf("%d", &x);
+                stack[++top] = x;
+                printf("%d pushed\n", x);
+            }
+            break;
+        case 2:
+            if (top == -1)
+                printf("Stack Underflow! Cannot pop.\n");
+            else
+                printf("Popped %d\n", stack[top--]);
+            break;
+        case 3:
+            if (top == -1)
+                printf("Stack is empty\n");
+            else
+                printf("Top element = %d\n", stack[top]);
+            break;
+        case 4:
+            if (top == -1) {
+                printf("Stack is empty\n");
+            } else {
+                printf("Stack (top to bottom): ");
+                for (i = top; i >= 0; i--)
+                    printf("%d ", stack[i]);
+                printf("\n");
+            }
+            break;
+        case 0:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+    return 0;
+}
