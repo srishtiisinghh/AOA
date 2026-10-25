@@ -1,0 +1,77 @@
+Simulate a printer queue using a linked list. Each node stores a job ID and number of pages. Add new print
+jobs, process the job at the front of the queue, and display pending jobs.
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Job {
+    int id;
+    int pages;
+    struct Job *next;
+};
+int main(void)
+{
+    struct Job *front = NULL, *rear = NULL, *p;
+    int ch, id, pages;
+    do {
+        printf("\n--- PRINTER QUEUE ---\n");
+        printf("1. Add job  2. Process job\n");
+        printf("3. Display pending jobs  0. Exit\nEnter choice: ");
+        if (scanf("%d", &ch) != 1)
+            break;
+        switch (ch) {
+        case 1:
+            printf("Enter job ID and number of pages: ");
+            scanf("%d %d", &id, &pages);
+            p = (struct Job *)malloc(sizeof(struct Job));
+            if (p == NULL) {
+                printf("Memory allocation failed\n");
+                return 1;
+            }
+            p->id = id;
+            p->pages = pages;
+            p->next = NULL;
+            if (rear == NULL)
+                front = rear = p;
+            else {
+                rear->next = p;
+                rear = p;
+            }
+            printf("Job %d added\n", id);
+            break;
+        case 2:
+            if (front == NULL) {
+                printf("No jobs to process\n");
+            } else {
+                p = front;
+                printf("Printing job %d (%d pages)\n", p->id, p->pages);
+                front = front->next;
+                if (front == NULL)
+                    rear = NULL;
+                free(p);
+            }
+            break;
+        case 3:
+            if (front == NULL) {
+                printf("No pending jobs\n");
+            } else {
+                printf("Pending jobs:\n");
+Page 24
+DSA Practical - Corrected C Programs
+                for (p = front; p != NULL; p = p->next)
+                    printf("  Job ID = %d, Pages = %d\n", p->id, p->pages);
+            }
+            break;
+        case 0:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+    while (front != NULL) {
+        p = front;
+        front = front->next;
+        free(p);
+    }
+    return 0;
+}
