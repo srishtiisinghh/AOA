@@ -1,0 +1,80 @@
+Write a program to search for a target element using both linear search and binary search. Count the
+number of comparisons performed by each method. Use a sorted array for both searches and compare the results
+
+#include <stdio.h>
+int main() {
+    int a[100], n, t, i, lo, hi, mid, lp = 0, bp = 0, lc = 0, bc = 0;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter sorted elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    printf("Target: "); scanf("%d", &t);
+    for (i = 0; i < n; i++) {
+        lc++;
+        if (a[i] == t) { lp = i + 1; break; }
+    }
+    lo = 0; hi = n - 1;
+    while (lo <= hi) {
+        mid = (lo + hi) / 2; bc++;
+        if (a[mid] == t) { bp = mid + 1; break; }
+        if (a[mid] < t) lo = mid + 1; else hi = mid - 1;
+    }
+    printf("Linear: position %d, comparisons %d\n", lp, lc);
+    printf("Binary: position %d, comparisons %d\n", bp, bc);
+    printf("(position 0 means not found)\n");
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+int main(void)
+{
+    int a[100], n, target, i, low, high, mid;
+    int linPos = -1, binPos = -1, linCmp = 0, binCmp = 0;
+    printf("Enter number of elements (1-100): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 100) {
+        printf("Invalid size\n");
+        return 0;
+    }
+    printf("Enter %d integers in ascending order: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+    for (i = 1; i < n; i++) {
+        if (a[i] < a[i - 1]) {
+            printf("Array is not sorted. Please enter sorted input.\n");
+            return 0;
+        }
+    }
+    printf("Enter target value: ");
+    scanf("%d", &target);
+    /* linear search */
+    for (i = 0; i < n; i++) {
+        linCmp++;
+        if (a[i] == target) {
+            linPos = i + 1;
+            break;
+        }
+    }
+    /* binary search (one comparison of a[mid] with target per step) */
+    low = 0;
+    high = n - 1;
+    while (low <= high) {
+        mid = low + (high - low) / 2;
+        binCmp++;
+        if (a[mid] == target) {
+            binPos = mid + 1;
+            break;
+        } else if (a[mid] < target) {
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    printf("\n%-16s %-12s %s\n", "Method", "Position", "Comparisons");
+    if (linPos > 0) printf("%-16s %-12d %d\n", "Linear search", linPos, linCmp);
+    else            printf("%-16s %-12s %d\n", "Linear search", "not found", linCmp);
+    if (binPos > 0) printf("%-16s %-12d %d\n", "Binary search", binPos, binCmp);
+    else            printf("%-16s %-12s %d\n", "Binary search", "not found", binCmp);
+    return 0;
+}
