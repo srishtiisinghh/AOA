@@ -1,0 +1,29 @@
+Implement a queue using a linked list and a stack using an array. Insert several integers into the queue, transfer them to the
+stack, and then transfer them back to reverse the queue order.
+
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; } *f = NULL, *r = NULL;
+void enq(int x) {
+    struct node *p = malloc(sizeof(struct node));
+    p->data = x; p->next = NULL;
+    if (r == NULL) f = r = p; else { r->next = p; r = p; }
+}
+void show() {
+    struct node *p;
+    for (p = f; p; p = p->next) printf("%d ", p->data);
+    printf("\n");
+}
+int main() {
+    int s[100], top = -1, n, i, x;
+    struct node *p;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) { scanf("%d", &x); enq(x); }
+    printf("Queue: "); show();
+    while (f) { p = f; s[++top] = p->data; f = f->next; free(p); }
+    r = NULL;
+    while (top >= 0) enq(s[top--]);
+    printf("Reversed queue: "); show();
+    return 0;
+}
