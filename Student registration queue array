@@ -1,0 +1,41 @@
+Implement a queue using an array to store student roll numbers waiting for examination registration. Insert
+new roll numbers, process the next student, and display all students waiting in the queue.
+
+
+#include <stdio.h>
+#define SIZE 100
+
+int main(void) {
+    int q[SIZE], f = 0, r = 0, count = 0, ch, roll, i;
+
+    do {
+        printf("\n1.Add roll no. 2.Process next 3.Display 0.Exit: ");
+        if (scanf("%d", &ch) != 1) break;
+
+        if (ch == 1) {
+            if (count == SIZE) printf("Queue is full\n");
+            else {
+                printf("Roll number: ");
+                scanf("%d", &roll);
+                q[r] = roll;
+                r = (r + 1) % SIZE;
+                count++;
+            }
+        } else if (ch == 2) {
+            if (count == 0) printf("No students waiting\n");
+            else {
+                printf("Processing roll number %d\n", q[f]);
+                f = (f + 1) % SIZE;
+                count--;
+            }
+        } else if (ch == 3) {
+            if (count == 0) printf("No students waiting\n");
+            else {
+                for (i = 0; i < count; i++) printf("%d ", q[(f + i) % SIZE]);
+                printf("\n");
+            }
+        }
+    } while (ch != 0);
+
+    return 0;
+}
