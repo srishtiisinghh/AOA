@@ -1,0 +1,55 @@
+Write a program to sort an array using insertion sort. Insert each element into its correct position in the
+already sorted portion of the array. Display the array after each pass.
+
+
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, k, key;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 1; i < n; i++) {
+        key = a[i];
+        for (j = i - 1; j >= 0 && a[j] > key; j--) a[j + 1] = a[j];
+        a[j + 1] = key;
+        printf("Pass %d: ", i);
+        for (k = 0; k < n; k++) printf("%d ", a[k]);
+        printf("\n");
+    }
+    return 0;
+}
+
+
+
+
+#include <stdio.h>
+int main(void)
+{
+    int a[100], n, i, j, k, key;
+    printf("Enter number of elements (1-100): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 100) {
+        printf("Invalid size\n");
+        return 0;
+    }
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+    for (i = 1; i < n; i++) {
+        key = a[i];
+        j = i - 1;
+        while (j >= 0 && a[j] > key) {          /* shift larger elements right */
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = key;                         /* insert key */
+        printf("After pass %d: ", i);
+        for (k = 0; k < n; k++)
+            printf("%d ", a[k]);
+        printf("\n");
+    }
+    printf("Sorted array: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}
