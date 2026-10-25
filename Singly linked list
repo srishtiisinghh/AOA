@@ -1,0 +1,43 @@
+Write a program to create a singly linked list containing n integer elements. Display the elements from the
+first node to the last node and count the total number of nodes.
+
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node *next;
+};
+
+int main(void) {
+    struct node *head = NULL, *tail = NULL, *p;
+    int n, i, c = 0;
+
+    printf("Enter n: ");
+    if (scanf("%d", &n) != 1 || n < 1) { printf("Invalid size\n"); return 1; }
+
+    printf("Enter %d elements: ", n);
+    for (i = 0; i < n; i++) {
+        p = malloc(sizeof *p);
+        if (!p) { printf("Out of memory\n"); return 1; }
+        if (scanf("%d", &p->data) != 1) { printf("Invalid input\n"); return 1; }
+        p->next = NULL;
+        if (head == NULL) head = p;
+        else tail->next = p;
+        tail = p;
+    }
+
+    printf("List: ");
+    for (p = head; p; p = p->next) {
+        printf("%d ", p->data);
+        c++;
+    }
+    printf("\nTotal nodes = %d\n", c);
+
+    while (head) {              /* free all nodes */
+        p = head;
+        head = head->next;
+        free(p);
+    }
+    return 0;
+}
