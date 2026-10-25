@@ -1,0 +1,33 @@
+Write a program using an array-based stack to check whether an expression contains balanced
+parentheses. Test expressions containing (), {}, and []. Example: {(a+b)*[c-d]} is balanced, whereas {(a+b]} is not.
+
+#include <stdio.h>
+#include <string.h>
+int main(void)
+{
+    char expr[200], stack[200], c;
+    int i, top = -1, balanced = 1;
+    printf("Enter an expression: ");
+    if (!fgets(expr, sizeof expr, stdin))
+        return 0;
+    expr[strcspn(expr, "\n")] = '\0';
+    for (i = 0; expr[i] != '\0'; i++) {
+        c = expr[i];
+        if (c == '(' || c == '{' || c == '[') {
+            stack[++top] = c;                       /* push opening bracket */
+        } else if (c == ')' || c == '}' || c == ']') {
+            if (top == -1 ||
+                (c == ')' && stack[top] != '(') ||
+                (c == '}' && stack[top] != '{') ||
+                (c == ']' && stack[top] != '[')) {
+                balanced = 0;                       /* extra or mismatched */
+                break;
+            }
+            top--;                                  /* pop matching bracket */
+        }
+    }
+    if (top != -1)
+        balanced = 0;                               /* unclosed opening bracket */
+    printf("%s\n", balanced ? "Balanced" : "Not balanced");
+    return 0;
+}
