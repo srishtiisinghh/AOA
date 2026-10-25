@@ -1,0 +1,60 @@
+Create a stack using a linked list, insert at least five integer elements, and display the stack from top to bottom. Pop all elements
+to display them in reverse insertion order.
+
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; };
+int main() {
+    struct node *top = NULL, *p;
+    int i;
+    printf("Enter 5 integers: ");
+    for (i = 0; i < 5; i++) {
+        p = malloc(sizeof(struct node));
+        scanf("%d", &p->data);
+        p->next = top; top = p;
+    }
+    printf("Stack (top to bottom): ");
+    for (p = top; p; p = p->next) printf("%d ", p->data);
+    printf("\nPopped: ");
+    while (top) { p = top; printf("%d ", p->data); top = top->next; free(p); }
+    printf("\n");
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *next;
+};
+int main(void)
+{
+    struct Node *top = NULL, *p;
+    int i, x;
+    printf("Enter 5 integers: ");
+    for (i = 0; i < 5; i++) {
+        scanf("%d", &x);
+        p = (struct Node *)malloc(sizeof(struct Node));
+        if (p == NULL) {
+            printf("Memory allocation failed\n");
+            return 1;
+        }
+        p->data = x;
+        p->next = top;
+        top = p;
+    }
+Page 20
+DSA Practical - Corrected C Programs
+    printf("Stack (top to bottom): ");
+    for (p = top; p != NULL; p = p->next)
+        printf("%d ", p->data);
+    printf("\nPopping all elements: ");
+    while (top != NULL) {
+        p = top;
+        top = top->next;
+        printf("%d ", p->data);
+        free(p);
+    }
+    printf("\n");
+    return 0;
+}
