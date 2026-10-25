@@ -1,0 +1,45 @@
+Write a program to accept n integers and a target value. Use linear search to find the target and display its position. If the value
+occurs more than once, display all matching positions.
+
+#include <stdio.h>
+int main() {
+    int a[100], n, t, i, found = 0;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    printf("Target: "); scanf("%d", &t);
+    printf("Found at position(s): ");
+    for (i = 0; i < n; i++)
+        if (a[i] == t) { printf("%d ", i + 1); found = 1; }
+    if (!found) printf("none (not found)");
+    printf("\n");
+    return 0;
+}
+
+
+#include <stdio.h>
+int main(void)
+{
+    int a[100], n, target, i, found = 0;
+    printf("Enter number of elements (1-100): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 100) {
+        printf("Invalid size\n");
+        return 0;
+    }
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+    printf("Enter target value: ");
+    scanf("%d", &target);
+    printf("Positions of %d: ", target);
+    for (i = 0; i < n; i++) {
+        if (a[i] == target) {
+            printf("%d ", i + 1);       /* 1-based position */
+            found = 1;
+        }
+    }
+    if (!found)
+        printf("not found");
+    printf("\n");
+    return 0;
+}
