@@ -1,0 +1,72 @@
+Write a program to insert an element at a specified position in an array and delete an element from a
+specified position. Display the array after each operation and handle invalid positions.
+
+#include <stdio.h>
+#define MAX 100
+void display(int a[], int n)
+{
+    int i;
+    printf("Array: ");
+    if (n == 0)
+        printf("(empty)");
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+int main(void)
+{
+    int a[MAX], n, i, pos, x, ch;
+    printf("Enter number of elements (0-%d): ", MAX - 1);
+    if (scanf("%d", &n) != 1 || n < 0 || n >= MAX) {
+        printf("Invalid size\n");
+        return 0;
+    }
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        scanf("%d", &a[i]);
+    display(a, n);
+    do {
+        printf("\n1. Insert  2. Delete  0. Exit\nEnter choice: ");
+        if (scanf("%d", &ch) != 1)
+            break;
+        if (ch == 1) {
+            if (n == MAX) {
+                printf("Array is full\n");
+                continue;
+            }
+            printf("Enter position (1 to %d): ", n + 1);
+            scanf("%d", &pos);
+            if (pos < 1 || pos > n + 1) {
+                printf("Invalid position\n");
+                continue;
+DSA Practical - Corrected C Programs Page 4
+            }
+            printf("Enter value: ");
+            scanf("%d", &x);
+            for (i = n; i >= pos; i--)      /* shift right, from the end */
+                a[i] = a[i - 1];
+            a[pos - 1] = x;
+            n++;
+            display(a, n);
+        } else if (ch == 2) {
+            if (n == 0) {
+                printf("Array is empty\n");
+                continue;
+            }
+            printf("Enter position (1 to %d): ", n);
+            scanf("%d", &pos);
+            if (pos < 1 || pos > n) {
+                printf("Invalid position\n");
+                continue;
+            }
+            printf("Deleted %d\n", a[pos - 1]);
+            for (i = pos - 1; i < n - 1; i++)   /* shift left */
+                a[i] = a[i + 1];
+            n--;
+            display(a, n);
+        } else if (ch != 0) {
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+    return 0;
+}
