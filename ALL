@@ -1,0 +1,978 @@
+1.	MENU DRIVEN ARRAY OP
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+    int n, ch, i;
+
+    printf("Enter number of elements: ");
+    if (scanf("%d", &n) != 1 || n < 1) { printf("Invalid size\n"); return 1; }
+
+    int *a = malloc(n * sizeof *a);
+    if (!a) { printf("Out of memory\n"); return 1; }
+
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        if (scanf("%d", &a[i]) != 1) { printf("Invalid input\n"); free(a); return 1; }
+
+    do {
+        printf("\n--- MENU ---\n"
+               "1. Display all elements\n"
+               "2. Sum and average\n"
+               "3. Largest and smallest\n"
+               "4. Count even and odd\n"
+               "0. Exit\n"
+               "Enter choice: ");
+        if (scanf("%d", &ch) != 1)
+        break;
+
+        long long sum = 0;
+        int min = a[0], max = a[0], even = 0;
+
+        switch (ch) {
+            case 1:
+                printf("Elements: ");
+                for (i = 0; i < n; i++) printf("%d ", a[i]);
+                printf("\n");
+                break;
+            case 2:
+                for (i = 0; i < n; i++) sum += a[i];
+                printf("Sum = %lld, Average = %.2f\n", sum, (double)sum / n);
+                break;
+            case 3:
+                for (i = 1; i < n; i++) {
+                    if (a[i] < min) min = a[i];
+                    if (a[i] > max) max = a[i];
+                }
+                printf("Largest = %d, Smallest = %d\n", max, min);
+                break;
+            case 4:
+                for (i = 0; i < n; i++) even += (a[i] % 2 == 0);
+                printf("Even = %d, Odd = %d\n", even, n - even);
+                break;
+            case 0:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    } while (ch != 0); 
+
+    free(a);
+    return 0;
+}
+
+
+2.	DELETE AN ARRAY AT SPECIFIED ARRAY POSITION
+
+#include <stdio.h>
+#define MAX 100
+
+void show(int a[], int n) {
+    printf("Array: ");
+    for (int i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("%s\n", n ? "" : "(empty)");
+}
+
+int main(void) {
+    int a[MAX], n, i, p, x, ch;
+
+    printf("Enter n (0-%d): ", MAX);
+    if (scanf("%d", &n) != 1 || n < 0 || n > MAX) { printf("Invalid size\n"); return 1; }
+
+    printf("Enter %d elements: ", n);
+    for (i = 0; i < n; i++)
+        if (scanf("%d", &a[i]) != 1) { printf("Invalid input\n"); return 1; }
+    show(a, n);
+
+    do {
+        printf("\n1.Insert 2.Delete 0.Exit: ");
+        if (scanf("%d", &ch) != 1) break;
+
+        if (ch == 1) {
+            if (n == MAX) { printf("Array is full\n"); continue; }
+            printf("Position (1-%d): ", n + 1);
+            if (scanf("%d", &p) != 1 || p < 1 || p > n + 1) { printf("Invalid position\n"); break; }
+            printf("Value: ");
+            if (scanf("%d", &x) != 1) { printf("Invalid value\n"); break; }
+            for (i = n; i >= p; i--) a[i] = a[i - 1];
+            a[p - 1] = x;
+            n++;
+            show(a, n);
+        } else if (ch == 2) {
+            if (n == 0) { printf("Array is empty\n"); continue; }
+            printf("Position (1-%d): ", n);
+            if (scanf("%d", &p) != 1 || p < 1 || p > n) { printf("Invalid position\n"); break; }
+            printf("Deleted %d\n", a[p - 1]);
+            for (i = p - 1; i < n - 1; i++) a[i] = a[i + 1];
+            n--;
+            show(a, n);
+        } else if (ch != 0) {
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+
+    return 0;
+}
+
+3.	REVERSE AN ARRAY WITHOUT A SECOND ARRAY
+#include <stdio.h>
+
+int main(void) {
+    int a[100], n, i, temp;
+
+    printf("Enter number of elements (1-100): ");
+    if (scanf("%d", &n) != 1 || n < 1 || n > 100) { printf("Invalid size\n"); return 1; }
+
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++)
+        if (scanf("%d", &a[i]) != 1) { printf("Invalid input\n"); return 1; }
+
+    printf("Original array: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+
+    for (i = 0; i < n / 2; i++) {      /* swap a[i] with a[n-1-i] */
+        temp = a[i];
+        a[i] = a[n - 1 - i];
+        a[n - 1 - i] = temp;
+    }
+
+    printf("\nReversed array: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}
+
+4.	STACK USING AN ARRAY
+
+#include <stdio.h>
+#define CAP 5
+int main(void)
+{
+    int stack[CAP], top = -1, ch, x, i;
+    do {
+        printf("\n--- STACK MENU (capacity %d) ---\n", CAP);
+        printf("1. PUSH  2. POP  3. PEEK  4. DISPLAY  0. Exit\nEnter choice: ");
+        if (scanf("%d", &ch) != 1)
+            break;
+        switch (ch) {
+        case 1:
+            if (top == CAP - 1) {
+                printf("Stack Overflow! Cannot push.\n");
+            } else {
+                printf("Enter value: ");
+                scanf("%d", &x);
+                stack[++top] = x;
+                printf("%d pushed\n", x);
+            }
+            break;
+        case 2:
+            if (top == -1)
+                printf("Stack Underflow! Cannot pop.\n");
+            else
+                printf("Popped %d\n", stack[top--]);
+            break;
+        case 3:
+            if (top == -1)
+                printf("Stack is empty\n");
+            else
+                printf("Top element = %d\n", stack[top]);
+            break;
+        case 4:
+            if (top == -1) {
+                printf("Stack is empty\n");
+            } else {
+                printf("Stack (top to bottom): ");
+                for (i = top; i >= 0; i--)
+                    printf("%d ", stack[i]);
+                printf("\n");
+            }
+            break;
+        case 0:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+    return 0;
+}
+
+5.	REVERSE A STRING USING AN ARRAY STACK
+#include <stdio.h>
+#include <string.h>
+int main(void)
+{
+    char str[200], stack[200];
+    int i, top = -1;
+    printf("Enter a string: ");
+    if (!fgets(str, sizeof str, stdin))
+        return 0;
+    str[strcspn(str, "\n")] = '\0';
+    for (i = 0; str[i] != '\0'; i++)    /* push every character */
+        stack[++top] = str[i];
+    printf("Reversed string: ");
+    while (top >= 0)                    /* pop gives reverse order */
+        putchar(stack[top--]);
+    printf("\n");
+    return 0;
+}
+
+6.	PARANTHESES
+#include <stdio.h>
+#include <string.h>
+int main(void)
+{
+    char expr[200], stack[200], c;
+    int i, top = -1, balanced = 1;
+    printf("Enter an expression: ");
+    if (!fgets(expr, sizeof expr, stdin))
+        return 0;
+    expr[strcspn(expr, "\n")] = '\0';
+    for (i = 0; expr[i] != '\0'; i++) {
+        c = expr[i];
+        if (c == '(' || c == '{' || c == '[') {
+            stack[++top] = c;                       /* push opening bracket */
+        } else if (c == ')' || c == '}' || c == ']') {
+            if (top == -1 ||
+                (c == ')' && stack[top] != '(') ||
+                (c == '}' && stack[top] != '{') ||
+                (c == ']' && stack[top] != '[')) {
+                balanced = 0;                       /* extra or mismatched */
+                break;
+            }
+            top--;                                  /* pop matching bracket */
+        }
+    }
+    if (top != -1)
+        balanced = 0;                               /* unclosed opening bracket */
+    printf("%s\n", balanced ? "Balanced" : "Not balanced");
+    return 0;
+}
+7.	LINEAR QUEUE USING ARRAY
+#include <stdio.h>
+#define MAX 5
+
+int main(void) {
+    int q[MAX], f = 0, r = -1, ch, x, i;
+
+    do {
+        printf("\n1.Enqueue 2.Dequeue 3.Peek 4.Display 0.Exit: ");
+        if (scanf("%d", &ch) != 1) break;
+
+        if (ch == 1) {
+            if (r == MAX - 1) printf("Overflow\n");
+            else { printf("Value: "); scanf("%d", &x); q[++r] = x; }
+        } else if (ch == 2) {
+            if (f > r) printf("Underflow\n");
+            else printf("Dequeued %d\n", q[f++]);
+        } else if (ch == 3) {
+            if (f > r) printf("Queue empty\n");
+            else printf("Front = %d\n", q[f]);
+        } else if (ch == 4) {
+            if (f > r) printf("Queue empty\n");
+            else { for (i = f; i <= r; i++) printf("%d ", q[i]); printf("\n"); }
+        }
+    } while (ch != 0);
+
+    return 0;
+}
+8.	CIRCULAR QUEUE USING ARRAY
+#include <stdio.h>
+#define SIZE 5
+
+int main(void) {
+    int q[SIZE], f = 0, r = 0, count = 0, ch, x, i;
+
+    do {
+        printf("\n1.Insert 2.Delete 3.Display 0.Exit: ");
+        if (scanf("%d", &ch) != 1) break;
+
+        if (ch == 1) {
+            if (count == SIZE) printf("Queue is full\n");
+            else {
+                printf("Value: ");
+                scanf("%d", &x);
+                q[r] = x;
+                r = (r + 1) % SIZE;
+                count++;
+            }
+        } else if (ch == 2) {
+            if (count == 0) printf("Queue is empty\n");
+            else {
+                printf("Deleted %d\n", q[f]);
+                f = (f + 1) % SIZE;
+                count--;
+            }
+        } else if (ch == 3) {
+            if (count == 0) printf("Queue is empty\n");
+            else {
+                for (i = 0; i < count; i++) printf("%d ", q[(f + i) % SIZE]);
+                printf("\n");
+            }
+        }
+    } while (ch != 0);
+
+    return 0;
+}
+9.	STUDENT REGISTRATION QUEUE
+#include <stdio.h>
+#define SIZE 100
+
+int main(void) {
+    int q[SIZE], f = 0, r = 0, count = 0, ch, roll, i;
+
+    do {
+        printf("\n1.Add roll no. 2.Process next 3.Display 0.Exit: ");
+        if (scanf("%d", &ch) != 1) break;
+
+        if (ch == 1) {
+            if (count == SIZE) printf("Queue is full\n");
+            else {
+                printf("Roll number: ");
+                scanf("%d", &roll);
+                q[r] = roll;
+                r = (r + 1) % SIZE;
+                count++;
+            }
+        } else if (ch == 2) {
+            if (count == 0) printf("No students waiting\n");
+            else {
+                printf("Processing roll number %d\n", q[f]);
+                f = (f + 1) % SIZE;
+                count--;
+            }
+        } else if (ch == 3) {
+            if (count == 0) printf("No students waiting\n");
+            else {
+                for (i = 0; i < count; i++) printf("%d ", q[(f + i) % SIZE]);
+                printf("\n");
+            }
+        }
+    } while (ch != 0);
+
+    return 0;
+}
+
+10.	CREATE DISPLAY COUNT SINGLY LINKED LIST
+
+#include <stdio.h>
+#include <stdlib.h>
+struct Node {
+    int data;
+    struct Node *next;
+};
+int main(void)
+{
+    struct Node *head = NULL, *tail = NULL, *p, *tmp;
+    int n, i, x, count = 0;
+    printf("Enter number of nodes: ");
+    if (scanf("%d", &n) != 1 || n < 0) {
+        printf("Invalid input\n");
+        return 0;
+    }
+    printf("Enter %d integers: ", n);
+    for (i = 0; i < n; i++) {
+        scanf("%d", &x);
+        p = (struct Node *)malloc(sizeof(struct Node));
+        if (p == NULL) {
+            printf("Memory allocation failed\n");
+            return 1;
+        }
+        p->data = x;
+        p->next = NULL;
+        if (head == NULL)
+            head = p;           /* first node */
+        else
+            tail->next = p;     /* link after last node */
+        tail = p;
+    }
+    printf("Linked list: ");
+    for (p = head; p != NULL; p = p->next) {
+        printf("%d ", p->data);
+        count++;
+    }
+    printf("\nTotal number of nodes = %d\n", count);
+    while (head != NULL) {      /* free all nodes */
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+    return 0;
+}
+
+11.	INSERTION IN SINGLY LL
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; } *head = NULL;
+struct node *mk(int x) {
+    struct node *p = malloc(sizeof(struct node));
+    p->data = x; p->next = NULL;
+    return p;
+}
+void show() {
+    struct node *p;
+    printf("List: ");
+    for (p = head; p; p = p->next) printf("%d ", p->data);
+    printf("\n");
+}
+int main() {
+    struct node *p, *t, *tail = NULL;
+    int n, i, x, pos, len, ch;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &x); p = mk(x);
+        if (head == NULL) head = p; else tail->next = p;
+        tail = p;
+    }
+    show();
+    do {
+        printf("1.Begin 2.End 3.Position 0.Exit: "); scanf("%d", &ch);
+        if (ch < 1 || ch > 3) continue;
+        printf("Value: "); scanf("%d", &x); p = mk(x);
+        if (ch == 3) {
+            printf("Position: "); scanf("%d", &pos);
+            for (len = 0, t = head; t; t = t->next) len++;
+            if (pos < 1 || pos > len + 1) { printf("Invalid\n"); free(p); continue; }
+            if (pos == 1) ch = 1;
+            else {
+                for (t = head, i = 1; i < pos - 1; i++) t = t->next;
+                p->next = t->next; t->next = p;
+            }
+        }
+        if (ch == 1) { p->next = head; head = p; }
+        else if (ch == 2) {
+            if (head == NULL) head = p;
+            else { for (t = head; t->next; t = t->next); t->next = p; }
+        }
+        show();
+    } while (ch != 0);
+    return 0;
+}
+12.	DELETION AND SEARCH IN SINGLY LL
+
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; } *head = NULL;
+void show() {
+    struct node *p;
+    printf("List: ");
+    for (p = head; p; p = p->next) printf("%d ", p->data);
+    printf("\n");
+}
+int main() {
+    struct node *p, *prev, *tail = NULL;
+    int n, i, x, pos, ch, found;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) {
+        p = malloc(sizeof(struct node));
+        scanf("%d", &p->data); p->next = NULL;
+        if (head == NULL) head = p; else tail->next = p;
+        tail = p;
+    }
+    show();
+    do {
+        printf("1.Del first 2.Del last 3.Del position 4.Search 0.Exit: "); scanf("%d", &ch);
+        if (ch == 4) {
+            printf("Value: "); scanf("%d", &x); found = 0;
+            for (p = head, i = 1; p; p = p->next, i++)
+                if (p->data == x) { printf("Found at position %d\n", i); found = 1; }
+            if (!found) printf("Not found\n");
+        } else if (ch >= 1 && ch <= 3) {
+            if (head == NULL) { printf("List empty\n"); continue; }
+            pos = 1;
+            if (ch == 2) for (pos = 0, p = head; p; p = p->next) pos++;
+            if (ch == 3) { printf("Position: "); scanf("%d", &pos); }
+            for (prev = NULL, p = head, i = 1; p && i < pos; i++) { prev = p; p = p->next; }
+            if (pos < 1 || p == NULL) { printf("Invalid\n"); continue; }
+            if (prev) prev->next = p->next; else head = p->next;
+            printf("Deleted %d\n", p->data); free(p);
+            show();
+        }
+    } while (ch != 0);
+    return 0;
+}
+
+13.	STACK USING SINGLY LL
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; };
+int main() {
+    struct node *top = NULL, *p;
+    int ch;
+    do {
+        printf("\n1.Push 2.Pop 3.Peek 4.Display 0.Exit: "); scanf("%d", &ch);
+        if (ch == 1) {
+            p = malloc(sizeof(struct node));
+            printf("Value: "); scanf("%d", &p->data);
+            p->next = top; top = p;
+        } else if (ch == 2) {
+            if (top == NULL) printf("Stack empty");
+            else { p = top; printf("Popped %d", p->data); top = top->next; free(p); }
+        } else if (ch == 3) {
+            if (top == NULL) printf("Stack empty"); else printf("Top = %d", top->data);
+        } else if (ch == 4) {
+            if (top == NULL) printf("Stack empty");
+            else for (p = top; p; p = p->next) printf("%d ", p->data);
+        }
+    } while (ch != 0);
+    return 0;
+}
+
+14.	LL STACK PUSH FIVE POP ALL
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; };
+int main() {
+    struct node *top = NULL, *p;
+    int i;
+    printf("Enter 5 integers: ");
+    for (i = 0; i < 5; i++) {
+        p = malloc(sizeof(struct node));
+        scanf("%d", &p->data);
+        p->next = top; top = p;
+    }
+    printf("Stack (top to bottom): ");
+    for (p = top; p; p = p->next) printf("%d ", p->data);
+    printf("\nPopped: ");
+    while (top) { p = top; printf("%d ", p->data); top = top->next; free(p); }
+    printf("\n");
+   return 0;
+}
+
+
+15.	DECIMAL TO BINARY USING LL
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int bit; struct node *next; };
+int main() {
+    struct node *top = NULL, *p;
+    int n;
+    printf("Enter a positive integer: "); scanf("%d", &n);
+    if (n <= 0) { printf("Invalid\n"); return 0; }
+    while (n > 0) {
+        p = malloc(sizeof(struct node));
+        p->bit = n % 2; p->next = top; top = p;
+        n /= 2;
+    }
+    printf("Binary: ");
+    while (top) { p = top; printf("%d", p->bit); top = top->next; free(p); }
+    printf("\n");
+    return 0;
+}
+16.	QUEUE USING LL
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; };
+int main() {
+    struct node *f = NULL, *r = NULL, *p;
+    int ch;
+    do {
+        printf("\n1.Enqueue 2.Dequeue 3.Peek 4.Display 0.Exit: "); scanf("%d", &ch);
+        if (ch == 1) {
+            p = malloc(sizeof(struct node));
+            printf("Value: "); scanf("%d", &p->data); p->next = NULL;
+            if (r == NULL) f = r = p; else { r->next = p; r = p; }
+        } else if (ch == 2) {
+            if (f == NULL) printf("Queue empty");
+            else {
+                p = f; printf("Dequeued %d", p->data);
+                f = f->next;
+                if (f == NULL) r = NULL;
+                free(p);
+            }
+        } else if (ch == 3) {
+            if (f == NULL) printf("Queue empty"); else printf("Front = %d", f->data);
+        } else if (ch == 4) {
+            if (f == NULL) printf("Queue empty");
+            else for (p = f; p; p = p->next) printf("%d ", p->data);
+        }
+    } while (ch != 0);
+    return 0;
+}
+
+17.	PRINTER QUEUE USING LL
+#include <stdio.h>
+#include <stdlib.h>
+struct Job {
+    int id;
+    int pages;
+    struct Job *next;
+};
+int main(void)
+{
+    struct Job *front = NULL, *rear = NULL, *p;
+    int ch, id, pages;
+    do {
+        printf("\n--- PRINTER QUEUE ---\n");
+        printf("1. Add job  2. Process job\n");
+        printf("3. Display pending jobs  0. Exit\nEnter choice: ");
+        if (scanf("%d", &ch) != 1)
+            break;
+        switch (ch) {
+        case 1:
+            printf("Enter job ID and number of pages: ");
+            scanf("%d %d", &id, &pages);
+            p = (struct Job *)malloc(sizeof(struct Job));
+            if (p == NULL) {
+                printf("Memory allocation failed\n");
+                return 1;
+            }
+            p->id = id;
+            p->pages = pages;
+            p->next = NULL;
+            if (rear == NULL)
+                front = rear = p;
+            else {
+                rear->next = p;
+                rear = p;
+            }
+            printf("Job %d added\n", id);
+            break;
+        case 2:
+            if (front == NULL) {
+                printf("No jobs to process\n");
+            } else {
+                p = front;
+                printf("Printing job %d (%d pages)\n", p->id, p->pages);
+                front = front->next;
+                if (front == NULL)
+                    rear = NULL;
+                free(p);
+            }
+            break;
+        case 3:
+            if (front == NULL) {
+                printf("No pending jobs\n");
+            } else {
+                printf("Pending jobs:\n");
+                for (p = front; p != NULL; p = p->next)
+                    printf("  Job ID = %d, Pages = %d\n", p->id, p->pages);
+            }
+            break;
+        case 0:
+            printf("Exiting...\n");
+            break;
+        default:
+            printf("Invalid choice\n");
+        }
+    } while (ch != 0);
+    while (front != NULL) {
+        p = front;
+        front = front->next;
+        free(p);
+    }
+    return 0;
+}
+18.	REVERSE QUEUE USING STACK
+#include <stdio.h>
+#include <stdlib.h>
+struct node { int data; struct node *next; } *f = NULL, *r = NULL;
+void enq(int x) {
+    struct node *p = malloc(sizeof(struct node));
+    p->data = x; p->next = NULL;
+    if (r == NULL) f = r = p; else { r->next = p; r = p; }
+}
+void show() {
+    struct node *p;
+    for (p = f; p; p = p->next) printf("%d ", p->data);
+    printf("\n");
+}
+int main() {
+    int s[100], top = -1, n, i, x;
+    struct node *p;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) { scanf("%d", &x); enq(x); }
+    printf("Queue: "); show();
+    while (f) { p = f; s[++top] = p->data; f = f->next; free(p); }
+    r = NULL;
+    while (top >= 0) enq(s[top--]);
+    printf("Reversed queue: "); show();
+    return 0;
+}
+
+19.	LINEAR SEARCH WITH MATCHING POSITIONS
+#include <stdio.h>
+int main() {
+    int a[100], n, t, i, found = 0;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    printf("Target: "); scanf("%d", &t);
+    printf("Found at position(s): ");
+    for (i = 0; i < n; i++)
+        if (a[i] == t) { printf("%d ", i + 1); found = 1; }
+    if (!found) printf("none (not found)");
+    printf("\n");
+    return 0;
+}
+
+20.	ITERATIVE BINARY SEARCH
+#include <stdio.h>
+int main() {
+    int a[100], n, t, i, lo, hi, mid;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter sorted elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    printf("Target: "); scanf("%d", &t);
+    lo = 0; hi = n - 1;
+    while (lo <= hi) {
+        mid = (lo + hi) / 2;
+        if (a[mid] == t) { printf("Found at position %d\n", mid + 1); return 0; }
+        if (a[mid] < t) lo = mid + 1; else hi = mid - 1;
+    }
+    printf("Not found\n");
+    return 0;
+}
+21.	LINEAR VS BINARY COMPARISON
+#include <stdio.h>
+int main() {
+    int a[100], n, t, i, lo, hi, mid, lp = 0, bp = 0, lc = 0, bc = 0;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter sorted elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    printf("Target: "); scanf("%d", &t);
+    for (i = 0; i < n; i++) {
+        lc++;
+        if (a[i] == t) { lp = i + 1; break; }
+    }
+    lo = 0; hi = n - 1;
+    while (lo <= hi) {
+        mid = (lo + hi) / 2; bc++;
+        if (a[mid] == t) { bp = mid + 1; break; }
+        if (a[mid] < t) lo = mid + 1; else hi = mid - 1;
+    }
+    printf("Linear: position %d, comparisons %d\n", lp, lc);
+    printf("Binary: position %d, comparisons %d\n", bp, bc);
+    printf("(position 0 means not found)\n");
+    return 0;
+}
+22.	BUBBLE SORT DISPLAYED
+#include <stdio.h>
+void bubble(int a[], int n, int opt, int *c, int *s) {
+    int i, j, t, sw;
+    *c = *s = 0;
+    for (i = 0; i < n - 1; i++) {
+        sw = 0;
+        for (j = 0; j < n - 1 - i; j++) {
+            (*c)++;
+            if (a[j] > a[j + 1]) { t = a[j]; a[j] = a[j + 1]; a[j + 1] = t; (*s)++; sw = 1; }
+        }
+        if (opt && !sw) break;
+    }
+}
+void test(const char *name, int a[], int n) {
+    int x[100], y[100], i, c1, s1, c2, s2;
+    for (i = 0; i < n; i++) x[i] = y[i] = a[i];
+    bubble(x, n, 0, &c1, &s1);
+    bubble(y, n, 1, &c2, &s2);
+    printf("%-15s Standard: %d cmp, %d swaps | Optimized: %d cmp, %d swaps\n",
+           name, c1, s1, c2, s2);
+}
+int main() {
+    int a[100], r[100], n, i, c, s;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    test("Given", a, n);
+    bubble(a, n, 0, &c, &s);
+    test("Already sorted", a, n);
+    for (i = 0; i < n; i++) r[i] = a[n - 1 - i];
+    test("Reverse sorted", r, n);
+    return 0;
+}
+23.	OPTIMIZED BUBBLE SORT
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, t, sw, passes = 0, cmp = 0;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 0; i < n - 1; i++) {
+        sw = 0; passes++;
+        for (j = 0; j < n - 1 - i; j++) {
+            cmp++;
+            if (a[j] > a[j + 1]) { t = a[j]; a[j] = a[j + 1]; a[j + 1] = t; sw = 1; }
+        }
+        if (!sw) break;
+    }
+    printf("Sorted: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("\nPasses = %d, Comparisons = %d\n", passes, cmp);
+    return 0;
+}
+
+24.	STANDARD VS OPTIMIZED BUBBLE SORT
+#include <stdio.h>
+void bubble(int a[], int n, int opt, int *c, int *s) {
+    int i, j, t, sw;
+    *c = *s = 0;
+    for (i = 0; i < n - 1; i++) {
+        sw = 0;
+        for (j = 0; j < n - 1 - i; j++) {
+            (*c)++;
+            if (a[j] > a[j + 1]) { t = a[j]; a[j] = a[j + 1]; a[j + 1] = t; (*s)++; sw = 1; }
+        }
+        if (opt && !sw) break;
+    }
+}
+void test(const char *name, int a[], int n) {
+    int x[100], y[100], i, c1, s1, c2, s2;
+    for (i = 0; i < n; i++) x[i] = y[i] = a[i];
+    bubble(x, n, 0, &c1, &s1);
+    bubble(y, n, 1, &c2, &s2);
+    printf("%-15s Standard: %d cmp, %d swaps | Optimized: %d cmp, %d swaps\n",
+           name, c1, s1, c2, s2);
+}
+int main() {
+    int a[100], r[100], n, i, c, s;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    test("Given", a, n);
+    bubble(a, n, 0, &c, &s);
+    test("Already sorted", a, n);
+    for (i = 0; i < n; i++) r[i] = a[n - 1 - i];
+    test("Reverse sorted", r, n);
+    return 0;
+}
+25.	SELECTION SORT ASCENDING
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, k, m, t;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 0; i < n - 1; i++) {
+        m = i;
+        for (j = i + 1; j < n; j++)
+            if (a[j] < a[m]) m = j;
+        t = a[i]; a[i] = a[m]; a[m] = t;
+        printf("Pass %d: ", i + 1);
+        for (k = 0; k < n; k++) printf("%d ", a[k]);
+        printf("\n");
+    }
+    return 0;
+}
+26.	SELECTION SORT DESCENDING
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, k, m, t;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    printf("Original: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("\n");
+    for (i = 0; i < n - 1; i++) {
+        m = i;
+        for (j = i + 1; j < n; j++)
+            if (a[j] > a[m]) m = j;
+        t = a[i]; a[i] = a[m]; a[m] = t;
+        printf("Pass %d: ", i + 1);
+        for (k = 0; k < n; k++) printf("%d ", a[k]);
+        printf("\n");
+    }
+    return 0;
+}
+27.	SELECTION SORT COMPARISON AND SWAP
+#include <stdio.h>
+void selection(int a[], int n, int *c, int *s) {
+    int i, j, m, t;
+    *c = *s = 0;
+    for (i = 0; i < n - 1; i++) {
+        m = i;
+        for (j = i + 1; j < n; j++) {
+            (*c)++;
+            if (a[j] < a[m]) m = j;
+        }
+        if (m != i) { t = a[i]; a[i] = a[m]; a[m] = t; (*s)++; }
+    }
+}
+int main() {
+    int a[100], n, i, c1, s1, c2, s2;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    selection(a, n, &c1, &s1);
+    selection(a, n, &c2, &s2);
+    printf("Sorted: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("\nUnsorted input : %d comparisons, %d swaps\n", c1, s1);
+    printf("Sorted input   : %d comparisons, %d swaps\n", c2, s2);
+    return 0;
+}
+
+28.	INSERTION SORT ASCENDING
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, k, key;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 1; i < n; i++) {
+        key = a[i];
+        for (j = i - 1; j >= 0 && a[j] > key; j--) a[j + 1] = a[j];
+        a[j + 1] = key;
+        printf("Pass %d: ", i);
+        for (k = 0; k < n; k++) printf("%d ", a[k]);
+        printf("\n");
+    }
+    return 0;
+}
+29.	INSERTION SORT DESCENDING
+#include <stdio.h>
+int main() {
+    int a[100], n, i, j, key;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements: ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    for (i = 1; i < n; i++) {
+        key = a[i];
+        for (j = i - 1; j >= 0 && a[j] < key; j--) a[j + 1] = a[j];
+        a[j + 1] = key;
+    }
+    printf("Descending: ");
+    for (i = 0; i < n; i++) printf("%d ", a[i]);
+    printf("\n");
+    return 0;
+}
+
+30.	INSERTION SORT COOMPARISONS AND SHIFTS
+#include <stdio.h>
+void insertion(int a[], int n, int *c, int *s) {
+    int i, j, key;
+    *c = *s = 0;
+    for (i = 1; i < n; i++) {
+        key = a[i];
+        for (j = i - 1; j >= 0; j--) {
+            (*c)++;
+            if (a[j] <= key) break;
+            a[j + 1] = a[j]; (*s)++;
+        }
+        a[j + 1] = key;
+    }
+}
+void test(const char *name, int a[], int n) {
+    int x[100], i, c, s;
+    for (i = 0; i < n; i++) x[i] = a[i];
+    insertion(x, n, &c, &s);
+    printf("%-15s %d comparisons, %d shifts\n", name, c, s);
+}
+int main() {
+    int a[100], r[100], n, i, c, s;
+    printf("Enter n: "); scanf("%d", &n);
+    printf("Enter elements (random order): ");
+    for (i = 0; i < n; i++) scanf("%d", &a[i]);
+    test("Random", a, n);
+    insertion(a, n, &c, &s);
+    test("Already sorted", a, n);
+    for (i = 0; i < n; i++) r[i] = a[n - 1 - i];
+    test("Reverse sorted", r, n);
+    printf("Best case (sorted): O(n). Worst case (reverse sorted): O(n^2).\n");
+    return 0;
+}
